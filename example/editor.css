@@ -1,0 +1,77 @@
+/** Editor */
+.formatting-button {
+  margin-right: 3px;
+  padding: 4px;
+  display: inline-block;
+  font-size: 19px !important;
+}
+.formatting-button:hover,
+.formatting-button:focus {
+    background-color: lightgray;
+  }
+}
+
+.formatting-button_active {
+  background-color: slategray;
+}
+
+.public-DraftEditorPlaceholder-root {
+  color: gray;
+  position: absolute;
+  z-index: 0;
+  width: 80%;
+}
+
+.text-editor__controls {
+  text-align: left;
+}
+
+.text-editor__body{
+  color: var(--slate);
+  background-color: white;
+  position: relative;
+  cursor: text;
+  z-index: 1;
+  padding: .5rem .6rem;
+  display: inline-block;
+  border: 1px solid #414A52;
+  border-radius: 4px;
+  vertical-align: middle;
+  width: 100%;
+}
+.text-editor__body:editor-link {
+    text-decoration: underline;
+    color: turquoise;
+  }
+}
+
+.text-editor__link-url {
+  background-color: slategray;
+  border-radius: 4px;
+  position:absolute;
+  color: white;
+  padding: 10px;
+  top: 50px;
+  width: 400px;
+}
+.text-editor__link-url > div {
+  position: relative;
+  background: #414A52;
+}
+.text-editor__link-url > div:after {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(65, 74, 82, 0);
+	border-bottom-color: #414A52;
+	border-width: 30px;
+	margin-left: -30px;
+}
+.text-editor__link-url label {
+  width: 50px;
+}
