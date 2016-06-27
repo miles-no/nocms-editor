@@ -16,21 +16,19 @@ class Simple extends React.Component {
       text,
       type,
     } = this.props;
-    return <input placeholder={placeholder} value={text} type={type} onChange={this.onChange} />;
+    return <input placeholder={placeholder} value={text} onChange={this.onChange} />;
   }
 }
 
 Simple.propTypes = {
   text: React.PropTypes.string,
   placeholder: React.PropTypes.string,
-  type: React.PropTypes.string,
   scope: React.PropTypes.string,
 };
 
 Simple.defaultProps = {
   text: '',
   placeholder: 'Add text...',
-  type: 'text',
 };
 
 export default Simple;
