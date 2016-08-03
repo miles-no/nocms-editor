@@ -33,7 +33,7 @@ class LinkEditor extends React.Component {
     this.confirmLink = this.confirmLink.bind(this);
     this.onLinkInputKeyDown = this.onLinkInputKeyDown.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    this.toggleInlineStyle = (style) => this.toggleInlineStyle(style);
+    this.toggleInlineStyle = this.toggleInlineStyle.bind(this);
   }
 
   onLinkInputKeyDown(e) {
