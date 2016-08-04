@@ -279,11 +279,6 @@ var LinkEditor = function (_React$Component) {
             placeholder: this.props.placeholder,
             ref: 'editor'
           })
-        ),
-        _react2.default.createElement(
-          'div',
-          null,
-          html
         )
       );
     }
@@ -355,7 +350,7 @@ var Simple = function (_React$Component) {
       var text = _props.text;
       var type = _props.type;
 
-      return _react2.default.createElement('input', { placeholder: placeholder, value: text, type: type, onChange: this.onChange });
+      return _react2.default.createElement('input', { placeholder: placeholder, value: text, onChange: this.onChange });
     }
   }]);
 
@@ -365,14 +360,12 @@ var Simple = function (_React$Component) {
 Simple.propTypes = {
   text: _react2.default.PropTypes.string,
   placeholder: _react2.default.PropTypes.string,
-  type: _react2.default.PropTypes.string,
   scope: _react2.default.PropTypes.string
 };
 
 Simple.defaultProps = {
   text: '',
-  placeholder: 'Add text...',
-  type: 'text'
+  placeholder: 'Add text...'
 };
 
 exports.default = Simple;

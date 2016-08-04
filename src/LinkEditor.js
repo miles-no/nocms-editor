@@ -210,7 +210,6 @@ class LinkEditor extends React.Component {
             ref="editor"
           />
         </div>
-        <div>{html}</div>
       </div>
     );
   }
