@@ -243,7 +243,7 @@ var LinkEditor = function (_React$Component) {
             }),
             _react2.default.createElement(
               'button',
-              { onMouseDown: this.confirmLink, className: 'button secondary' },
+              { onMouseDown: this.confirmLink, className: 'button button_secondary' },
               'OK'
             )
           )
@@ -259,7 +259,7 @@ var LinkEditor = function (_React$Component) {
           _react2.default.createElement(_FormattingControls2.default, { editorState: this.state.editorState, onToggle: this.toggleInlineStyle }),
           _react2.default.createElement(
             'button',
-            { onMouseDown: this.promptForLink, className: 'button icon', disabled: this.state.disableAdd },
+            { onMouseDown: this.promptForLink, className: 'button button_icon', disabled: this.state.disableAdd },
             _react2.default.createElement(
               'i',
               { className: 'material-icons' },

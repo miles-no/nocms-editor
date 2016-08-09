@@ -186,7 +186,7 @@ class LinkEditor extends React.Component {
               value={this.state.urlValue}
               onKeyDown={this.onLinkInputKeyDown}
             />
-            <button onMouseDown={this.confirmLink} className="button secondary">
+            <button onMouseDown={this.confirmLink} className="button button_secondary">
               OK
             </button>
           </div>
@@ -197,7 +197,7 @@ class LinkEditor extends React.Component {
       <div className="text-editor" ref="textEditor">
         <div className="text-editor__controls">
           <FormattingControls editorState={this.state.editorState} onToggle={this.toggleInlineStyle} />
-          <button onMouseDown={this.promptForLink} className="button icon" disabled={this.state.disableAdd}>
+          <button onMouseDown={this.promptForLink} className="button button_icon" disabled={this.state.disableAdd}>
             <i className="material-icons">insert_link</i>
           </button>
         </div>
