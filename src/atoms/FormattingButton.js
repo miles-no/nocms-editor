@@ -10,7 +10,7 @@ class FormattingButton extends React.Component {
   }
 
   render() {
-    let className = 'button icon formatting-button';
+    let className = 'button button_icon formatting-button';
     if (this.props.active) {
       className += ' formatting-button_active';
     }

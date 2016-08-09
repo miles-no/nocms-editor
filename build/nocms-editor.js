@@ -404,7 +404,7 @@ var FormattingButton = function (_React$Component) {
   _createClass(FormattingButton, [{
     key: 'render',
     value: function render() {
-      var className = 'button icon formatting-button';
+      var className = 'button button_icon formatting-button';
       if (this.props.active) {
         className += ' formatting-button_active';
       }
