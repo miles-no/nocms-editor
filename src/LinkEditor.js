@@ -241,7 +241,6 @@ LinkEditor.propTypes = {
 
 LinkEditor.defaultProps = {
   text: '',
-  placeholder: 'Add text...',
 };
 
 export default LinkEditor;
