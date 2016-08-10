@@ -4700,8 +4700,7 @@
 	};
 	
 	LinkEditor.defaultProps = {
-	  text: '',
-	  placeholder: 'Add text...'
+	  text: ''
 	};
 	
 	exports.default = LinkEditor;
