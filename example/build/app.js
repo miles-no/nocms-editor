@@ -4451,6 +4451,7 @@
 	    _this.state = {
 	      editorState: _draftJs.EditorState.createWithContent(convertedText, _this.decorator),
 	      showURLInput: false,
+	      showToolbar: false,
 	      urlValue: '',
 	      styleObj: {},
 	      disableAdd: true
@@ -4461,6 +4462,7 @@
 	    };
 	    _this.onChange = _this.onChange.bind(_this);
 	    _this.onBlur = _this.onBlur.bind(_this);
+	    _this.onFocus = _this.onFocus.bind(_this);
 	    _this.promptForLink = _this.promptForLink.bind(_this);
 	    _this.onURLChange = function (e) {
 	      return _this.setState({ urlValue: e.target.value });
@@ -4503,9 +4505,20 @@
 	  }, {
 	    key: 'onBlur',
 	    value: function onBlur() {
+	      if (this.state.showURLInput) {
+	        return;
+	      }
+	
 	      var html = (0, _draftJsExportHtml.stateToHTML)(this.state.editorState.getCurrentContent());
 	
 	      _nocmsEvents2.default.trigger('nocms.value-changed', this.props.scope, html);
+	
+	      this.setState({ showToolbar: false });
+	    }
+	  }, {
+	    key: 'onFocus',
+	    value: function onFocus() {
+	      this.setState({ showToolbar: true });
 	    }
 	  }, {
 	    key: 'getSelectionRect',
@@ -4648,7 +4661,7 @@
 	        { className: 'text-editor', ref: 'textEditor' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'text-editor__controls' },
+	          { className: 'text-editor__controls', style: { visibility: this.state.showToolbar ? 'visible' : 'hidden' } },
 	          _react2.default.createElement(_FormattingControls2.default, { editorState: this.state.editorState, onToggle: this.toggleInlineStyle }),
 	          _react2.default.createElement(
 	            'button',
@@ -4668,6 +4681,7 @@
 	            editorState: this.state.editorState,
 	            onChange: this.onChange,
 	            onBlur: this.onBlur,
+	            onFocus: this.onFocus,
 	            placeholder: this.props.placeholder,
 	            ref: 'editor'
 	          })

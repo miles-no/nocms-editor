@@ -22,6 +22,7 @@ class LinkEditor extends React.Component {
     this.state = {
       editorState: EditorState.createWithContent(convertedText, this.decorator),
       showURLInput: false,
+      showToolbar: false,
       urlValue: '',
       styleObj: {},
       disableAdd: true,
@@ -30,6 +31,7 @@ class LinkEditor extends React.Component {
     this.focus = () => this.refs.editor.focus();
     this.onChange = this.onChange.bind(this);
     this.onBlur = this.onBlur.bind(this);
+    this.onFocus = this.onFocus.bind(this);
     this.promptForLink = this.promptForLink.bind(this);
     this.onURLChange = (e) => this.setState({ urlValue: e.target.value });
     this.confirmLink = this.confirmLink.bind(this);
@@ -64,9 +66,19 @@ class LinkEditor extends React.Component {
   }
 
   onBlur() {
+    if (this.state.showURLInput) {
+      return;
+    }
+
     const html = stateToHTML(this.state.editorState.getCurrentContent());
 
     events.trigger('nocms.value-changed', this.props.scope, html);
+
+    this.setState({ showToolbar: false });
+  }
+
+  onFocus() {
+    this.setState({ showToolbar: true });
   }
 
   getSelectedClientRect = () => {
@@ -212,7 +224,7 @@ class LinkEditor extends React.Component {
 
     return (
       <div className="text-editor" ref="textEditor">
-        <div className="text-editor__controls">
+        <div className="text-editor__controls" style={{ visibility: this.state.showToolbar ? 'visible' : 'hidden' }}>
           <FormattingControls editorState={this.state.editorState} onToggle={this.toggleInlineStyle} />
           <button onMouseDown={this.promptForLink} className="button button_icon" disabled={this.state.disableAdd}>
             <i className="material-icons">insert_link</i>
@@ -224,6 +236,7 @@ class LinkEditor extends React.Component {
             editorState={this.state.editorState}
             onChange={this.onChange}
             onBlur={this.onBlur}
+            onFocus={this.onFocus}
             placeholder={this.props.placeholder}
             ref="editor"
           />
