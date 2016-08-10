@@ -6,12 +6,13 @@ import { stateToHTML } from 'draft-js-export-html';
 import { stateFromHTML } from 'draft-js-import-html';
 import Link from './atoms/Link';
 import FormattingControls from './atoms/FormattingControls';
+import events from 'nocms-events';
 
 class LinkEditor extends React.Component {
   constructor(props) {
     super(props);
 
-    const decorator = new CompositeDecorator([
+    this.decorator = new CompositeDecorator([
       {
         strategy: linkStrategy,
         component: Link,
@@ -19,7 +20,7 @@ class LinkEditor extends React.Component {
     ]);
     const convertedText = stateFromHTML(props.text);
     this.state = {
-      editorState: EditorState.createWithContent(convertedText, decorator),
+      editorState: EditorState.createWithContent(convertedText, this.decorator),
       showURLInput: false,
       urlValue: '',
       styleObj: {},
@@ -28,12 +29,22 @@ class LinkEditor extends React.Component {
 
     this.focus = () => this.refs.editor.focus();
     this.onChange = this.onChange.bind(this);
+    this.onBlur = this.onBlur.bind(this);
     this.promptForLink = this.promptForLink.bind(this);
     this.onURLChange = (e) => this.setState({ urlValue: e.target.value });
     this.confirmLink = this.confirmLink.bind(this);
     this.onLinkInputKeyDown = this.onLinkInputKeyDown.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.toggleInlineStyle = this.toggleInlineStyle.bind(this);
+  }
+
+  componentWillReceiveProps(props) {
+    if (this.state.showURLInput) {
+      return;
+    }
+
+    const convertedText = stateFromHTML(props.text);
+    this.setState({ editorState: EditorState.createWithContent(convertedText, this.decorator) });
   }
 
   onLinkInputKeyDown(e) {
@@ -50,6 +61,12 @@ class LinkEditor extends React.Component {
     } else {
       this.setState({ editorState, disableAdd: false });
     }
+  }
+
+  onBlur() {
+    const html = stateToHTML(this.state.editorState.getCurrentContent());
+
+    events.trigger('nocms.value-changed', this.props.scope, html);
   }
 
   getSelectedClientRect = () => {
@@ -192,7 +209,7 @@ class LinkEditor extends React.Component {
           </div>
         </div>);
     }
-    const html = stateToHTML(this.state.editorState.getCurrentContent());
+
     return (
       <div className="text-editor" ref="textEditor">
         <div className="text-editor__controls">
@@ -206,6 +223,7 @@ class LinkEditor extends React.Component {
           <Editor
             editorState={this.state.editorState}
             onChange={this.onChange}
+            onBlur={this.onBlur}
             placeholder={this.props.placeholder}
             ref="editor"
           />

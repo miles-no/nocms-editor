@@ -4404,6 +4404,10 @@
 	
 	var _FormattingControls2 = _interopRequireDefault(_FormattingControls);
 	
+	var _nocmsEvents = __webpack_require__(37);
+	
+	var _nocmsEvents2 = _interopRequireDefault(_nocmsEvents);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4439,13 +4443,13 @@
 	      return null;
 	    };
 	
-	    var decorator = new _draftJs.CompositeDecorator([{
+	    _this.decorator = new _draftJs.CompositeDecorator([{
 	      strategy: _linkStrategy2.default,
 	      component: _Link2.default
 	    }]);
 	    var convertedText = (0, _draftJsImportHtml.stateFromHTML)(props.text);
 	    _this.state = {
-	      editorState: _draftJs.EditorState.createWithContent(convertedText, decorator),
+	      editorState: _draftJs.EditorState.createWithContent(convertedText, _this.decorator),
 	      showURLInput: false,
 	      urlValue: '',
 	      styleObj: {},
@@ -4456,6 +4460,7 @@
 	      return _this.refs.editor.focus();
 	    };
 	    _this.onChange = _this.onChange.bind(_this);
+	    _this.onBlur = _this.onBlur.bind(_this);
 	    _this.promptForLink = _this.promptForLink.bind(_this);
 	    _this.onURLChange = function (e) {
 	      return _this.setState({ urlValue: e.target.value });
@@ -4468,6 +4473,16 @@
 	  }
 	
 	  _createClass(LinkEditor, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(props) {
+	      if (this.state.showURLInput) {
+	        return;
+	      }
+	
+	      var convertedText = (0, _draftJsImportHtml.stateFromHTML)(props.text);
+	      this.setState({ editorState: _draftJs.EditorState.createWithContent(convertedText, this.decorator) });
+	    }
+	  }, {
 	    key: 'onLinkInputKeyDown',
 	    value: function onLinkInputKeyDown(e) {
 	      if (e.which === 13) {
@@ -4484,6 +4499,13 @@
 	      } else {
 	        this.setState({ editorState: editorState, disableAdd: false });
 	      }
+	    }
+	  }, {
+	    key: 'onBlur',
+	    value: function onBlur() {
+	      var html = (0, _draftJsExportHtml.stateToHTML)(this.state.editorState.getCurrentContent());
+	
+	      _nocmsEvents2.default.trigger('nocms.value-changed', this.props.scope, html);
 	    }
 	  }, {
 	    key: 'getSelectionRect',
@@ -4620,7 +4642,7 @@
 	          )
 	        );
 	      }
-	      var html = (0, _draftJsExportHtml.stateToHTML)(this.state.editorState.getCurrentContent());
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'text-editor', ref: 'textEditor' },
@@ -4645,6 +4667,7 @@
 	          _react2.default.createElement(_draftJs.Editor, {
 	            editorState: this.state.editorState,
 	            onChange: this.onChange,
+	            onBlur: this.onBlur,
 	            placeholder: this.props.placeholder,
 	            ref: 'editor'
 	          })
