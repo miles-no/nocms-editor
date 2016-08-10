@@ -218,6 +218,7 @@ class LinkEditor extends React.Component {
 LinkEditor.propTypes = {
   text: React.PropTypes.string,
   placeholder: React.PropTypes.string,
+  scope: React.PropTypes.string,
 };
 
 LinkEditor.defaultProps = {
