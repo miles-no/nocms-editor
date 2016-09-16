@@ -4602,6 +4602,7 @@
 	    _this.onLinkInputKeyDown = _this.onLinkInputKeyDown.bind(_this);
 	    _this.handleKeyCommand = _this.handleKeyCommand.bind(_this);
 	    _this.toggleInlineStyle = _this.toggleInlineStyle.bind(_this);
+	    _this.abortLink = _this.abortLink.bind(_this);
 	    _this.onTab = _this.onTab.bind(_this);
 	    _this.toggleBlockType = _this.toggleBlockType.bind(_this);
 	    return _this;
@@ -4797,7 +4798,7 @@
 	              ),
 	              _react2.default.createElement(
 	                'button',
-	                null,
+	                { className: 'button', onClick: this.abortLink },
 	                'X'
 	              )
 	            ),
@@ -4815,14 +4816,9 @@
 	              onKeyDown: this.onLinkInputKeyDown
 	            }),
 	            _react2.default.createElement(
-	              'p',
-	              null,
-	              _react2.default.createElement(
-	                'i',
-	                { className: 'material-icons' },
-	                'info_outline'
-	              ),
-	              'Press enter to save, ESC to cancel'
+	              'button',
+	              { className: 'button', onClick: this.confirmLink },
+	              'OK'
 	            )
 	          )
 	        );

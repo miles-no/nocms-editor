@@ -39,6 +39,7 @@ class LinkEditor extends React.Component {
     this.onLinkInputKeyDown = this.onLinkInputKeyDown.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.toggleInlineStyle = this.toggleInlineStyle.bind(this);
+    this.abortLink = this.abortLink.bind(this);
     this.onTab = this.onTab.bind(this);
     this.toggleBlockType = this.toggleBlockType.bind(this);
   }
@@ -229,7 +230,7 @@ class LinkEditor extends React.Component {
           <div>
             <div>
               <span className="text-editor__link-header">Add link</span>
-              <button>X</button>
+              <button className="button" onClick={this.abortLink}>X</button>
             </div>
             <label htmlFor="url" >Link</label>
             <input
@@ -240,7 +241,7 @@ class LinkEditor extends React.Component {
               value={this.state.urlValue}
               onKeyDown={this.onLinkInputKeyDown}
             />
-            <p><i className="material-icons">info_outline</i>Press enter to save, ESC to cancel</p>
+            <button className="button" onClick={this.confirmLink}>OK</button>
           </div>
         </div>);
     }
