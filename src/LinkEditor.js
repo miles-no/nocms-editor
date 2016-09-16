@@ -6,6 +6,7 @@ import { stateToHTML } from 'draft-js-export-html';
 import { stateFromHTML } from 'draft-js-import-html';
 import Link from './atoms/Link';
 import FormattingControls from './atoms/FormattingControls';
+import BlockStyleControls from './atoms/BlockStyleControls';
 import events from 'nocms-events';
 
 class LinkEditor extends React.Component {
@@ -38,6 +39,8 @@ class LinkEditor extends React.Component {
     this.onLinkInputKeyDown = this.onLinkInputKeyDown.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.toggleInlineStyle = this.toggleInlineStyle.bind(this);
+    this.onTab = this.onTab.bind(this);
+    this.toggleBlockType = this.toggleBlockType.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -52,6 +55,8 @@ class LinkEditor extends React.Component {
   onLinkInputKeyDown(e) {
     if (e.which === 13) {
       this.confirmLink(e);
+    } else if (e.which === 27) {
+      this.abortLink(e);
     }
   }
 
@@ -69,11 +74,8 @@ class LinkEditor extends React.Component {
     if (this.state.showURLInput) {
       return;
     }
-
     const html = stateToHTML(this.state.editorState.getCurrentContent());
-
     events.trigger('nocms.value-changed', this.props.scope, html);
-
     this.setState({ showToolbar: false });
   }
 
@@ -100,6 +102,11 @@ class LinkEditor extends React.Component {
     return null;
   };
 
+  onTab(e) {
+    const maxDepth = 4;
+    this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
+  }
+
   getSelectionRect(selected) {
     if (!selected || !selected.rangeCount || selected.isCollapsed) return null;
 
@@ -123,6 +130,15 @@ class LinkEditor extends React.Component {
       return true;
     }
     return false;
+  }
+
+  toggleBlockType(blockType) {
+    this.onChange(
+      RichUtils.toggleBlockType(
+        this.state.editorState,
+        blockType
+      )
+    );
   }
 
   toggleInlineStyle(inlineStyle) {
@@ -149,12 +165,7 @@ class LinkEditor extends React.Component {
         editorState: RichUtils.toggleLink(editorState, selection, null),
       });
     } else {
-      const positionObj = this.getSelectedClientRect();
-      const leftSpace = this.refs.textEditor.getBoundingClientRect().left;
-      const calculatedLeft = positionObj.left + positionObj.width / 2 - 200 - leftSpace;
-
       this.setState({
-        styleObj: { left: calculatedLeft },
         showURLInput: true,
         urlValue: '',
       }, () => {
@@ -173,6 +184,16 @@ class LinkEditor extends React.Component {
         editorState.getSelection(),
         entityKey
       ),
+      showURLInput: false,
+      urlValue: '',
+    }, () => {
+      setTimeout(() => this.refs.editor.focus(), 0);
+    });
+  }
+
+  abortLink(e) {
+    e.preventDefault();
+    this.setState({
       showURLInput: false,
       urlValue: '',
     }, () => {
@@ -204,9 +225,13 @@ class LinkEditor extends React.Component {
     let urlInput;
     if (this.state.showURLInput) {
       urlInput =
-        (<div className="text-editor__link-url" style={this.state.styleObj}>
+        (<div className="text-editor__link-url">
           <div>
-            <label htmlFor="url" >URL</label>
+            <div>
+              <span className="text-editor__link-header">Add link</span>
+              <button>X</button>
+            </div>
+            <label htmlFor="url" >Link</label>
             <input
               id="url"
               onChange={this.onURLChange}
@@ -215,9 +240,7 @@ class LinkEditor extends React.Component {
               value={this.state.urlValue}
               onKeyDown={this.onLinkInputKeyDown}
             />
-            <button onMouseDown={this.confirmLink} className="button button_secondary">
-              OK
-            </button>
+            <p><i className="material-icons">info_outline</i>Press enter to save, ESC to cancel</p>
           </div>
         </div>);
     }
@@ -226,7 +249,8 @@ class LinkEditor extends React.Component {
       <div className="text-editor" ref="textEditor">
         <div className="text-editor__controls" style={{ visibility: this.state.showToolbar ? 'visible' : 'hidden' }}>
           <FormattingControls editorState={this.state.editorState} onToggle={this.toggleInlineStyle} />
-          <button onMouseDown={this.promptForLink} className="button button_icon" disabled={this.state.disableAdd}>
+          <BlockStyleControls editorState={this.state.editorState} onToggle={this.toggleBlockType} />
+          <button onMouseDown={this.promptForLink} className="button button_icon formatting-button" disabled={this.state.disableAdd}>
             <i className="material-icons">insert_link</i>
           </button>
         </div>
@@ -235,14 +259,23 @@ class LinkEditor extends React.Component {
           <Editor
             editorState={this.state.editorState}
             onChange={this.onChange}
+            handleKeyCommand={this.handleKeyCommand}
             onBlur={this.onBlur}
             onFocus={this.onFocus}
+            onTab={this.onTab}
             placeholder={this.props.placeholder}
             ref="editor"
           />
         </div>
       </div>
     );
+  }
+}
+
+function getBlockStyle(block) {
+  switch (block.getType()) {
+    case 'blockquote': return 'RichEditor-blockquote';
+    default: return null;
   }
 }
 
