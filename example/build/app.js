@@ -30463,24 +30463,16 @@
 	    var directionMap = nullthrows(editorState.getDirectionMap());
 	
 	    var blocksAsArray = content.getBlocksAsArray();
-	    var blocks = [];
-	    var currentWrapperElement = null;
-	    var currentWrapperTemplate = null;
+	    var processedBlocks = [];
 	    var currentDepth = null;
-	    var currentWrappedBlocks = void 0;
-	    var block = void 0,
-	        key = void 0,
-	        blockType = void 0,
-	        child = void 0,
-	        childProps = void 0,
-	        wrapperTemplate = void 0;
+	    var lastWrapperTemplate = null;
 	
 	    for (var ii = 0; ii < blocksAsArray.length; ii++) {
-	      block = blocksAsArray[ii];
-	      key = block.getKey();
-	      blockType = block.getType();
+	      var _block = blocksAsArray[ii];
+	      var key = _block.getKey();
+	      var blockType = _block.getType();
 	
-	      var customRenderer = blockRendererFn(block);
+	      var customRenderer = blockRendererFn(_block);
 	      var CustomComponent = void 0,
 	          customProps = void 0,
 	          customEditable = void 0;
@@ -30493,7 +30485,7 @@
 	      var direction = directionMap.get(key);
 	      var offsetKey = DraftOffsetKey.encode(key, 0, 0);
 	      var componentProps = {
-	        block: block,
+	        block: _block,
 	        blockProps: customProps,
 	        customStyleMap: customStyleMap,
 	        customStyleFn: customStyleFn,
@@ -30507,25 +30499,22 @@
 	      };
 	
 	      var configForType = blockRenderMap.get(blockType);
-	
-	      wrapperTemplate = configForType.wrapper;
-	
-	      var useNewWrapper = wrapperTemplate !== currentWrapperTemplate;
+	      var wrapperTemplate = configForType.wrapper;
 	
 	      var _Element = configForType.element || blockRenderMap.get('unstyled').element;
 	
-	      var depth = block.getDepth();
-	      var className = this.props.blockStyleFn(block);
+	      var depth = _block.getDepth();
+	      var className = this.props.blockStyleFn(_block);
 	
 	      // List items are special snowflakes, since we handle nesting and
 	      // counters manually.
 	      if (_Element === 'li') {
-	        var shouldResetCount = useNewWrapper || currentDepth === null || depth > currentDepth;
+	        var shouldResetCount = lastWrapperTemplate !== wrapperTemplate || currentDepth === null || depth > currentDepth;
 	        className = joinClasses(className, getListItemClasses(blockType, depth, shouldResetCount, direction));
 	      }
 	
 	      var Component = CustomComponent || DraftEditorBlock;
-	      childProps = {
+	      var childProps = {
 	        className: className,
 	        'data-block': true,
 	        'data-editor': this.props.editorKey,
@@ -30539,33 +30528,48 @@
 	        });
 	      }
 	
-	      child = React.createElement(_Element, childProps, React.createElement(Component, componentProps));
+	      var child = React.createElement(_Element, childProps, React.createElement(Component, componentProps));
+	
+	      processedBlocks.push({
+	        block: child,
+	        wrapperTemplate: wrapperTemplate,
+	        key: key,
+	        offsetKey: offsetKey
+	      });
 	
 	      if (wrapperTemplate) {
-	        if (useNewWrapper) {
-	          currentWrappedBlocks = [];
-	          currentWrapperElement = React.cloneElement(wrapperTemplate, {
-	            key: key + '-wrap',
-	            'data-offset-key': offsetKey
-	          }, currentWrappedBlocks);
-	          currentWrapperTemplate = wrapperTemplate;
-	          blocks.push(currentWrapperElement);
-	        }
-	        currentDepth = block.getDepth();
-	        nullthrows(currentWrappedBlocks).push(child);
+	        currentDepth = _block.getDepth();
 	      } else {
-	        currentWrappedBlocks = null;
-	        currentWrapperElement = null;
-	        currentWrapperTemplate = null;
 	        currentDepth = null;
-	        blocks.push(child);
+	      }
+	      lastWrapperTemplate = wrapperTemplate;
+	    }
+	
+	    // Group contiguous runs of blocks that have the same wrapperTemplate
+	    var outputBlocks = [];
+	    for (var _ii = 0; _ii < processedBlocks.length;) {
+	      var info = processedBlocks[_ii];
+	      if (info.wrapperTemplate) {
+	        var blocks = [];
+	        do {
+	          blocks.push(processedBlocks[_ii].block);
+	          _ii++;
+	        } while (_ii < processedBlocks.length && processedBlocks[_ii].wrapperTemplate === info.wrapperTemplate);
+	        var wrapperElement = React.cloneElement(info.wrapperTemplate, {
+	          key: info.key + '-wrap',
+	          'data-offset-key': info.offsetKey
+	        }, blocks);
+	        outputBlocks.push(wrapperElement);
+	      } else {
+	        outputBlocks.push(info.block);
+	        _ii++;
 	      }
 	    }
 	
 	    return React.createElement(
 	      'div',
 	      { 'data-contents': 'true' },
-	      blocks
+	      outputBlocks
 	    );
 	  };
 	
@@ -33419,6 +33423,8 @@
 	var getUpdatedSelectionState = __webpack_require__(242);
 	var nullthrows = __webpack_require__(206);
 	
+	var isEventHandled = __webpack_require__(323);
+	
 	/**
 	 * Get a SelectionState for the supplied mouse event.
 	 */
@@ -33472,7 +33478,7 @@
 	
 	    var files = data.getFiles();
 	    if (files.length > 0) {
-	      if (this.props.handleDroppedFiles && this.props.handleDroppedFiles(dropSelection, files)) {
+	      if (this.props.handleDroppedFiles && isEventHandled(this.props.handleDroppedFiles(dropSelection, files))) {
 	        return;
 	      }
 	
@@ -33484,7 +33490,7 @@
 	    }
 	
 	    var dragType = this._internalDrag ? 'internal' : 'external';
-	    if (this.props.handleDrop && this.props.handleDrop(dropSelection, data, dragType)) {
+	    if (this.props.handleDrop && isEventHandled(this.props.handleDrop(dropSelection, data, dragType))) {
 	      return;
 	    }
 	
@@ -34090,6 +34096,8 @@
 	var isSelectionAtLeafStart = __webpack_require__(215);
 	var nullthrows = __webpack_require__(206);
 	
+	var isEventHandled = __webpack_require__(323);
+	
 	// When nothing is focused, Firefox regards two characters, `'` and `/`, as
 	// commands that should open and focus the "quickfind" search bar. This should
 	// *never* happen while a contenteditable is focused, but as of v28, it
@@ -34137,7 +34145,7 @@
 	  // Simple examples: replacing a raw text ':)' with a smile emoji or image
 	  // decorator, or setting a block to be a list item after typing '- ' at the
 	  // start of the block.
-	  if (this.props.handleBeforeInput && this.props.handleBeforeInput(chars)) {
+	  if (this.props.handleBeforeInput && isEventHandled(this.props.handleBeforeInput(chars))) {
 	    e.preventDefault();
 	    return;
 	  }
@@ -34703,6 +34711,8 @@
 	var keyCommandTransposeCharacters = __webpack_require__(274);
 	var keyCommandUndo = __webpack_require__(275);
 	
+	var isEventHandled = __webpack_require__(323);
+	
 	var isOptionKeyCommand = KeyBindingUtil.isOptionKeyCommand;
 	
 	var isChrome = UserAgent.isBrowser('Chrome');
@@ -34759,7 +34769,7 @@
 	      e.preventDefault();
 	      // The top-level component may manually handle newline insertion. If
 	      // no special handling is performed, fall through to command handling.
-	      if (this.props.handleReturn && this.props.handleReturn(e)) {
+	      if (this.props.handleReturn && isEventHandled(this.props.handleReturn(e))) {
 	        return;
 	      }
 	      break;
@@ -34806,7 +34816,7 @@
 	  e.preventDefault();
 	
 	  // Allow components higher up the tree to handle the command first.
-	  if (this.props.handleKeyCommand && this.props.handleKeyCommand(command)) {
+	  if (this.props.handleKeyCommand && isEventHandled(this.props.handleKeyCommand(command))) {
 	    return;
 	  }
 	
@@ -36383,6 +36393,8 @@
 	var getTextContentFromFiles = __webpack_require__(241);
 	var splitTextIntoTextBlocks = __webpack_require__(281);
 	
+	var isEventHandled = __webpack_require__(323);
+	
 	/**
 	 * Paste content.
 	 */
@@ -36399,7 +36411,7 @@
 	    if (files.length > 0) {
 	      // Allow customized paste handling for images, etc. Otherwise, fall
 	      // through to insert text contents into the editor.
-	      if (this.props.handlePastedFiles && this.props.handlePastedFiles(files)) {
+	      if (this.props.handlePastedFiles && isEventHandled(this.props.handlePastedFiles(files))) {
 	        return;
 	      }
 	
@@ -36433,7 +36445,7 @@
 	  var text = data.getText();
 	  var html = data.getHTML();
 	
-	  if (this.props.handlePastedText && this.props.handlePastedText(text, html)) {
+	  if (this.props.handlePastedText && isEventHandled(this.props.handlePastedText(text, html))) {
 	    return;
 	  }
 	
@@ -37627,7 +37639,7 @@
 	
 	    var hasAtomicBlock = content.getBlockMap().skipWhile(function (_, k) {
 	      return k !== startKey;
-	    }).takeWhile(function (_, k) {
+	    }).reverse().skipWhile(function (_, k) {
 	      return k !== endKey;
 	    }).some(function (v) {
 	      return v.getType() === 'atomic';
@@ -37813,7 +37825,7 @@
 	      key: blockKey,
 	      text: block.getText(),
 	      type: block.getType(),
-	      depth: canHaveDepth(block) ? block.getDepth() : 0,
+	      depth: block.getDepth(),
 	      inlineStyleRanges: encodeInlineStyleRanges(block),
 	      entityRanges: encodeEntityRanges(block, entityStorageMap),
 	      data: block.getData().toObject()
@@ -37837,11 +37849,6 @@
 	    entityMap: flippedStorageMap,
 	    blocks: rawBlocks
 	  };
-	}
-	
-	function canHaveDepth(block) {
-	  var type = block.getType();
-	  return type === 'ordered-list-item' || type === 'unordered-list-item';
 	}
 	
 	module.exports = convertFromDraftStateToRaw;
@@ -45481,6 +45488,35 @@
 	};
 	
 	module.exports = BlockStyleControls;
+
+/***/ },
+/* 323 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule isEventHandled
+	 * @typechecks
+	 * 
+	 */
+	
+	'use strict';
+	
+	/**
+	 * Utility method for determining whether or not the value returned
+	 * from a handler indicates that it was handled.
+	 */
+	function isEventHandled(value) {
+	  return value === 'handled' || value === true;
+	}
+	
+	module.exports = isEventHandled;
 
 /***/ }
 /******/ ]);
