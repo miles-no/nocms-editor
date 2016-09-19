@@ -242,7 +242,7 @@ class LinkEditor extends React.Component {
             value={this.state.urlValue}
             onKeyDown={this.onLinkInputKeyDown}
           />
-          <div><button className="button" onClick={this.confirmLink}>OK</button></div>
+          <div className="button-container"><button className="button" onClick={this.confirmLink}>OK</button></div>
         </div>);
     }
 
