@@ -229,7 +229,9 @@ class LinkEditor extends React.Component {
         (<div className="text-editor__link-url">
           <div>
             <span className="text-editor__link-header">Add link</span>
-            <button className="button" onClick={this.abortLink}>X</button>
+            <button className="button button__icon button__icon-only" onClick={this.abortLink}>
+              <span><i className="material-icons">close</i><span className="sr-only">close</span></span>
+            </button>
           </div>
           <label htmlFor="url" >Link</label>
           <input
