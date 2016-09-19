@@ -228,21 +228,19 @@ class LinkEditor extends React.Component {
       urlInput =
         (<div className="text-editor__link-url">
           <div>
-            <div>
-              <span className="text-editor__link-header">Add link</span>
-              <button className="button" onClick={this.abortLink}>X</button>
-            </div>
-            <label htmlFor="url" >Link</label>
-            <input
-              id="url"
-              onChange={this.onURLChange}
-              ref="url"
-              type="text"
-              value={this.state.urlValue}
-              onKeyDown={this.onLinkInputKeyDown}
-            />
-            <button className="button" onClick={this.confirmLink}>OK</button>
+            <span className="text-editor__link-header">Add link</span>
+            <button className="button" onClick={this.abortLink}>X</button>
           </div>
+          <label htmlFor="url" >Link</label>
+          <input
+            id="url"
+            onChange={this.onURLChange}
+            ref="url"
+            type="text"
+            value={this.state.urlValue}
+            onKeyDown={this.onLinkInputKeyDown}
+          />
+          <button className="button" onClick={this.confirmLink}>OK</button>
         </div>);
     }
 

@@ -4789,37 +4789,33 @@
 	            'div',
 	            null,
 	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement(
-	                'span',
-	                { className: 'text-editor__link-header' },
-	                'Add link'
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'button', onClick: this.abortLink },
-	                'X'
-	              )
+	              'span',
+	              { className: 'text-editor__link-header' },
+	              'Add link'
 	            ),
-	            _react2.default.createElement(
-	              'label',
-	              { htmlFor: 'url' },
-	              'Link'
-	            ),
-	            _react2.default.createElement('input', {
-	              id: 'url',
-	              onChange: this.onURLChange,
-	              ref: 'url',
-	              type: 'text',
-	              value: this.state.urlValue,
-	              onKeyDown: this.onLinkInputKeyDown
-	            }),
 	            _react2.default.createElement(
 	              'button',
-	              { className: 'button', onClick: this.confirmLink },
-	              'OK'
+	              { className: 'button', onClick: this.abortLink },
+	              'X'
 	            )
+	          ),
+	          _react2.default.createElement(
+	            'label',
+	            { htmlFor: 'url' },
+	            'Link'
+	          ),
+	          _react2.default.createElement('input', {
+	            id: 'url',
+	            onChange: this.onURLChange,
+	            ref: 'url',
+	            type: 'text',
+	            value: this.state.urlValue,
+	            onKeyDown: this.onLinkInputKeyDown
+	          }),
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'button', onClick: this.confirmLink },
+	            'OK'
 	          )
 	        );
 	      }
