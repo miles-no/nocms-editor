@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import events from 'nocms-events';
 
 const DEFAULT_HEIGHT = 50;
-
+// Based on the work of http://dev.edenspiekermann.com/2016/08/26/react-textarea-auto-resize/
 class SimpleMultiline extends React.Component {
   constructor(props) {
     super(props);
