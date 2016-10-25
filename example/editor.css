@@ -1,3 +1,8 @@
+html, input, textarea {
+  font-size: 16px;
+  font-family: Arial;
+}
+
 /**
  * Draft v0.9.0
  *
@@ -8,6 +13,7 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
+
 .DraftEditor-editorContainer,.DraftEditor-root,.public-DraftEditor-content {
     height: inherit;
     text-align: initial
@@ -462,4 +468,28 @@ textarea[readonly] {
   & label {
     width: 50px;
   }
+}
+
+.textarea-wrapper {
+  position: relative;
+}
+
+.nocms__textarea {
+  width: 360px;
+  min-height: 20px;
+  box-shadow: none;
+  display: block;
+  overflow: hidden;  // Removes scrollbar
+  transition: height 0.2s ease;
+}
+
+.nocms__textarea--ghost {
+  opacity: 0.3;
+  display: block;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  padding: .5rem .6rem;
+  visibility: hidden;
+  position: absolute;
+  top: 0;
 }

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 const ReactDOM = require('react-dom');
-import { Simple, LinkEditor } from 'nocms-editor';
+import { Simple, LinkEditor, SimpleMultiline } from 'nocms-editor';
 import events from 'nocms-events';
 
 class App extends React.Component {
@@ -10,6 +10,7 @@ class App extends React.Component {
     this.state = {
       simple: '',
       linkeditor: '',
+      multiline: '',
     };
 
     events.listenTo('nocms.value-changed', (scope, value) => {
@@ -23,6 +24,7 @@ class App extends React.Component {
     return (<div>
       <Simple scope="simple" text={this.state.simple} />
       <LinkEditor scope="linkeditor" text={this.state.linkeditor} />
+      <SimpleMultiline scope="multiline" text={this.state.multiline} />
     </div>);
   }
 }
