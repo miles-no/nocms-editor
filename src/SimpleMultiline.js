@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import events from 'nocms-events';
 
 const DEFAULT_HEIGHT = 70;
+const textareaClass = 'nocms__text-input nocms__textarea';
+const centerClass = 'nocms__text-input--center';
 // Based on the work of http://dev.edenspiekermann.com/2016/08/26/react-textarea-auto-resize/
 class SimpleMultiline extends React.Component {
   constructor(props) {
@@ -36,7 +38,7 @@ class SimpleMultiline extends React.Component {
     const isOneLine = this.state.height <= DEFAULT_HEIGHT;
     const { height } = this.state;
     const { center, placeholder, text } = this.props;
-    const centerTextInput = center ? 'nocms__text-input nocms__textarea nocms__text-input--center' : 'nocms__text-input nocms__textarea';
+    const centerTextInput = center ? `${textareaClass} ${centerClass}` : { textareaClass };
 
     return (
       <textarea
@@ -46,7 +48,7 @@ class SimpleMultiline extends React.Component {
         placeholder={placeholder}
         style={{
           height,
-          resize: isOneLine ? 'none' : null
+          resize: isOneLine ? 'none' : null,
         }}
         onChange={this.onChange}
         onKeyUp={this.setFilledTextareaHeight}
@@ -67,10 +69,22 @@ class SimpleMultiline extends React.Component {
   }
 
   render() {
+    const { center, text, placeholder, autoresize } = this.props;
+    const className = center ? `${textareaClass} ${centerClass}` : { textareaClass };
     return (
-      <div className="textarea-wrapper">
-        {this.getExpandableField()}
-        {this.getGhostField()}
+      <div>
+        {autoresize ?
+          <div className="textarea-wrapper">
+            {this.getExpandableField()}
+            {this.getGhostField()}
+          </div>
+        : <textarea
+          className={className}
+          value={text}
+          placeholder={placeholder}
+          onChange={this.onChange}
+        />
+        }
       </div>
     );
   }
@@ -82,12 +96,14 @@ SimpleMultiline.propTypes = {
   placeholder: PropTypes.string,
   scope: PropTypes.string,
   center: PropTypes.bool,
+  autoresize: PropTypes.bool,
 };
 
 SimpleMultiline.defaultProps = {
   text: '',
   placeholder: 'Add text...',
   center: false,
+  autoresize: true,
 };
 
 export default SimpleMultiline;
