@@ -16,8 +16,10 @@ class SimpleMultiline extends React.Component {
   }
 
   componentDidMount() {
-    this.mounted = true;
-    this.setFilledTextareaHeight();
+    if (this.props.autoresize) {
+      this.mounted = true;
+      this.setFilledTextareaHeight();
+    }
   }
 
   onChange(event) {
@@ -38,7 +40,7 @@ class SimpleMultiline extends React.Component {
     const isOneLine = this.state.height <= DEFAULT_HEIGHT;
     const { height } = this.state;
     const { center, placeholder, text } = this.props;
-    const centerTextInput = center ? `${textareaClass} ${centerClass}` : { textareaClass };
+    const centerTextInput = center ? `${textareaClass} ${centerClass}` : textareaClass;
 
     return (
       <textarea
@@ -70,7 +72,7 @@ class SimpleMultiline extends React.Component {
 
   render() {
     const { center, text, placeholder, autoresize } = this.props;
-    const className = center ? `${textareaClass} ${centerClass}` : { textareaClass };
+    const className = center ? `${textareaClass} ${centerClass}` : textareaClass;
     return (
       <div>
         {autoresize ?
@@ -88,7 +90,6 @@ class SimpleMultiline extends React.Component {
       </div>
     );
   }
-
 }
 
 SimpleMultiline.propTypes = {

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import events from 'nocms-events';
 
-class Simple extends React.Component {
+class Simple extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
@@ -10,11 +10,11 @@ class Simple extends React.Component {
   onChange(event) {
     events.trigger('nocms.value-changed', this.props.scope, event.target.value);
   }
+
   render() {
     const {
       placeholder,
       text,
-      type,
     } = this.props;
     return <input placeholder={placeholder} value={text} onChange={this.onChange} />;
   }
