@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "draft-js": "^0.9.0",
-    "draft-js-export-html": "^0.4.0",
+    "draft-js-export-html": "^0.5.2",
     "draft-js-import-html": "^0.2.0",
     "nocms-events": "git+ssh://git@bitbucket.org/nocms/nocms-events.git"
   },
@@ -39,15 +39,16 @@
     "eslint-plugin-import": "^1.9.2",
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
-    "react": "^15.1.0",
-    "react-dom": "^15.1.0",
+    "react": "^15.4.0",
+    "react-dom": "^15.4.0",
     "uglify-js": "^2.6.4",
     "watch": "^0.19.1",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
   },
   "peerDependencies": {
-    "react": "^15.0.0"
+    "react": "^15.4.0",
+    "react-dom": "^15.4.0"
   },
   "browserify-global-shim": {
     "react": "React",
