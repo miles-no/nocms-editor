@@ -4,5 +4,5 @@
     "react",
     "stage-1"
   ],
-  "plugins": ["add-module-exports", "transform-class-properties"]
+  "plugins": ["add-module-exports"]
 }
