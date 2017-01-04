@@ -34,7 +34,7 @@
 /******/ 	__webpack_require__.c = installedModules;
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/Users/jorgen/dev/nocms/packages/nocms-editor/example";
+/******/ 	__webpack_require__.p = "/Users/wenche/Documents/Prosjekter/NoCMS/packages/nocms-editor/example";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -885,12 +885,18 @@
 	 * will remain to ensure logic does not differ in production.
 	 */
 	
-	function invariant(condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
+	var validateFormat = function validateFormat(format) {};
+	
+	if (process.env.NODE_ENV !== 'production') {
+	  validateFormat = function validateFormat(format) {
 	    if (format === undefined) {
 	      throw new Error('invariant requires an error message argument');
 	    }
-	  }
+	  };
+	}
+	
+	function invariant(condition, format, a, b, c, d, e, f) {
+	  validateFormat(format);
 	
 	  if (!condition) {
 	    var error;
@@ -3262,30 +3268,38 @@
 	// Set.prototype.keys
 	Set.prototype != null && typeof Set.prototype.keys === 'function' && isNative(Set.prototype.keys);
 	
+	var setItem;
+	var getItem;
+	var removeItem;
+	var getItemIDs;
+	var addRoot;
+	var removeRoot;
+	var getRootIDs;
+	
 	if (canUseCollections) {
 	  var itemMap = new Map();
 	  var rootIDSet = new Set();
 	
-	  var setItem = function (id, item) {
+	  setItem = function (id, item) {
 	    itemMap.set(id, item);
 	  };
-	  var getItem = function (id) {
+	  getItem = function (id) {
 	    return itemMap.get(id);
 	  };
-	  var removeItem = function (id) {
+	  removeItem = function (id) {
 	    itemMap['delete'](id);
 	  };
-	  var getItemIDs = function () {
+	  getItemIDs = function () {
 	    return Array.from(itemMap.keys());
 	  };
 	
-	  var addRoot = function (id) {
+	  addRoot = function (id) {
 	    rootIDSet.add(id);
 	  };
-	  var removeRoot = function (id) {
+	  removeRoot = function (id) {
 	    rootIDSet['delete'](id);
 	  };
-	  var getRootIDs = function () {
+	  getRootIDs = function () {
 	    return Array.from(rootIDSet.keys());
 	  };
 	} else {
@@ -3301,31 +3315,31 @@
 	    return parseInt(key.substr(1), 10);
 	  };
 	
-	  var setItem = function (id, item) {
+	  setItem = function (id, item) {
 	    var key = getKeyFromID(id);
 	    itemByKey[key] = item;
 	  };
-	  var getItem = function (id) {
+	  getItem = function (id) {
 	    var key = getKeyFromID(id);
 	    return itemByKey[key];
 	  };
-	  var removeItem = function (id) {
+	  removeItem = function (id) {
 	    var key = getKeyFromID(id);
 	    delete itemByKey[key];
 	  };
-	  var getItemIDs = function () {
+	  getItemIDs = function () {
 	    return Object.keys(itemByKey).map(getIDFromKey);
 	  };
 	
-	  var addRoot = function (id) {
+	  addRoot = function (id) {
 	    var key = getKeyFromID(id);
 	    rootByKey[key] = true;
 	  };
-	  var removeRoot = function (id) {
+	  removeRoot = function (id) {
 	    var key = getKeyFromID(id);
 	    delete rootByKey[key];
 	  };
-	  var getRootIDs = function () {
+	  getRootIDs = function () {
 	    return Object.keys(rootByKey).map(getIDFromKey);
 	  };
 	}
@@ -4106,7 +4120,7 @@
 	
 	'use strict';
 	
-	module.exports = '15.4.0';
+	module.exports = '15.4.1';
 
 /***/ },
 /* 31 */
@@ -6125,6 +6139,28 @@
 	  return '.' + inst._rootNodeID;
 	};
 	
+	function isInteractive(tag) {
+	  return tag === 'button' || tag === 'input' || tag === 'select' || tag === 'textarea';
+	}
+	
+	function shouldPreventMouseEvent(name, type, props) {
+	  switch (name) {
+	    case 'onClick':
+	    case 'onClickCapture':
+	    case 'onDoubleClick':
+	    case 'onDoubleClickCapture':
+	    case 'onMouseDown':
+	    case 'onMouseDownCapture':
+	    case 'onMouseMove':
+	    case 'onMouseMoveCapture':
+	    case 'onMouseUp':
+	    case 'onMouseUpCapture':
+	      return !!(props.disabled && isInteractive(type));
+	    default:
+	      return false;
+	  }
+	}
+	
 	/**
 	 * This is a unified interface for event plugins to be installed and configured.
 	 *
@@ -6193,7 +6229,12 @@
 	   * @return {?function} The stored callback.
 	   */
 	  getListener: function (inst, registrationName) {
+	    // TODO: shouldPreventMouseEvent is DOM-specific and definitely should not
+	    // live here; needs to be moved to a better place soon
 	    var bankForRegistrationName = listenerBank[registrationName];
+	    if (shouldPreventMouseEvent(registrationName, inst._currentElement.type, inst._currentElement.props)) {
+	      return null;
+	    }
 	    var key = getDictionaryKey(inst);
 	    return bankForRegistrationName && bankForRegistrationName[key];
 	  },
@@ -20283,18 +20324,6 @@
 	  return tag === 'button' || tag === 'input' || tag === 'select' || tag === 'textarea';
 	}
 	
-	function shouldPreventMouseEvent(inst) {
-	  if (inst) {
-	    var disabled = inst._currentElement && inst._currentElement.props.disabled;
-	
-	    if (disabled) {
-	      return isInteractive(inst._tag);
-	    }
-	  }
-	
-	  return false;
-	}
-	
 	var SimpleEventPlugin = {
 	
 	  eventTypes: eventTypes,
@@ -20365,10 +20394,7 @@
 	      case 'topMouseDown':
 	      case 'topMouseMove':
 	      case 'topMouseUp':
-	        // Disabled elements should not respond to mouse events
-	        if (shouldPreventMouseEvent(targetInst)) {
-	          return null;
-	        }
+	      // TODO: Disabled elements should not respond to mouse events
 	      /* falls through */
 	      case 'topMouseOut':
 	      case 'topMouseOver':
@@ -21730,7 +21756,7 @@
 	
 	'use strict';
 	
-	module.exports = '15.4.0';
+	module.exports = '15.4.1';
 
 /***/ },
 /* 176 */
@@ -39778,7 +39804,6 @@
 	
 	var MarkupGenerator = function () {
 	  // These are related to state.
-	
 	  function MarkupGenerator(contentState, options) {
 	    _classCallCheck(this, MarkupGenerator);
 	
@@ -39843,7 +39868,7 @@
 	        this.currentBlock += 1;
 	        return;
 	      }
-	      this.writeStartTag(blockType);
+	      this.writeStartTag(block);
 	      this.output.push(this.renderBlockContent(block));
 	      // Look ahead and see if we will nest list.
 	      var nextBlock = this.getNextBlock();
@@ -39862,7 +39887,7 @@
 	      } else {
 	        this.currentBlock += 1;
 	      }
-	      this.writeEndTag(blockType);
+	      this.writeEndTag(block);
 	    }
 	  }, {
 	    key: 'processBlocksAtDepth',
@@ -39881,8 +39906,27 @@
 	    }
 	  }, {
 	    key: 'writeStartTag',
-	    value: function writeStartTag(blockType) {
-	      var tags = getTags(blockType);
+	    value: function writeStartTag(block) {
+	      var tags = getTags(block.getType());
+	
+	      var attrString = void 0;
+	      if (this.options.blockStyleFn) {
+	        var _ref = this.options.blockStyleFn(block) || {};
+	
+	        var _attributes = _ref.attributes;
+	        var _style = _ref.style;
+	        // Normalize `className` -> `class`, etc.
+	
+	        _attributes = (0, _normalizeAttributes2.default)(_attributes);
+	        if (_style != null) {
+	          var styleAttr = (0, _styleToCSS2.default)(_style);
+	          _attributes = _attributes == null ? { style: styleAttr } : _extends({}, _attributes, { style: styleAttr });
+	        }
+	        attrString = stringifyAttrs(_attributes);
+	      } else {
+	        attrString = '';
+	      }
+	
 	      var _iteratorNormalCompletion3 = true;
 	      var _didIteratorError3 = false;
 	      var _iteratorError3 = undefined;
@@ -39891,7 +39935,7 @@
 	        for (var _iterator3 = tags[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
 	          var tag = _step3.value;
 	
-	          this.output.push('<' + tag + '>');
+	          this.output.push('<' + tag + attrString + '>');
 	        }
 	      } catch (err) {
 	        _didIteratorError3 = true;
@@ -39910,8 +39954,8 @@
 	    }
 	  }, {
 	    key: 'writeEndTag',
-	    value: function writeEndTag(blockType) {
-	      var tags = getTags(blockType);
+	    value: function writeEndTag(block) {
+	      var tags = getTags(block.getType());
 	      if (tags.length === 1) {
 	        this.output.push('</' + tags[0] + '>\n');
 	      } else {
@@ -39955,10 +39999,12 @@
 	  }, {
 	    key: 'closeWrapperTag',
 	    value: function closeWrapperTag() {
-	      if (this.wrapperTag) {
+	      var wrapperTag = this.wrapperTag;
+	
+	      if (wrapperTag) {
 	        this.indentLevel -= 1;
 	        this.indent();
-	        this.output.push('</' + this.wrapperTag + '>\n');
+	        this.output.push('</' + wrapperTag + '>\n');
 	        this.wrapperTag = null;
 	      }
 	    }
@@ -39981,17 +40027,17 @@
 	      text = this.preserveWhitespace(text);
 	      var charMetaList = block.getCharacterList();
 	      var entityPieces = (0, _draftJsUtils.getEntityRanges)(text, charMetaList);
-	      return entityPieces.map(function (_ref) {
-	        var _ref2 = _slicedToArray(_ref, 2);
+	      return entityPieces.map(function (_ref2) {
+	        var _ref3 = _slicedToArray(_ref2, 2);
 	
-	        var entityKey = _ref2[0];
-	        var stylePieces = _ref2[1];
+	        var entityKey = _ref3[0];
+	        var stylePieces = _ref3[1];
 	
-	        var content = stylePieces.map(function (_ref3) {
-	          var _ref4 = _slicedToArray(_ref3, 2);
+	        var content = stylePieces.map(function (_ref4) {
+	          var _ref5 = _slicedToArray(_ref4, 2);
 	
-	          var text = _ref4[0];
-	          var styleSet = _ref4[1];
+	          var text = _ref5[0];
+	          var styleSet = _ref5[1];
 	
 	          var content = encodeContent(text);
 	          var _iteratorNormalCompletion5 = true;
@@ -40009,19 +40055,19 @@
 	              if (styleSet.has(_styleName)) {
 	                var _inlineStyles$_styleN = _this.inlineStyles[_styleName];
 	                var _element = _inlineStyles$_styleN.element;
-	                var _attributes = _inlineStyles$_styleN.attributes;
-	                var _style = _inlineStyles$_styleN.style;
+	                var _attributes2 = _inlineStyles$_styleN.attributes;
+	                var _style2 = _inlineStyles$_styleN.style;
 	
 	                if (_element == null) {
 	                  _element = 'span';
 	                }
 	                // Normalize `className` -> `class`, etc.
-	                _attributes = (0, _normalizeAttributes2.default)(_attributes);
-	                if (_style != null) {
-	                  var styleAttr = (0, _styleToCSS2.default)(_style);
-	                  _attributes = _attributes == null ? { style: styleAttr } : _extends({}, _attributes, { style: styleAttr });
+	                _attributes2 = (0, _normalizeAttributes2.default)(_attributes2);
+	                if (_style2 != null) {
+	                  var styleAttr = (0, _styleToCSS2.default)(_style2);
+	                  _attributes2 = _attributes2 == null ? { style: styleAttr } : _extends({}, _attributes2, { style: styleAttr });
 	                }
-	                var attrString = stringifyAttrs(_attributes);
+	                var attrString = stringifyAttrs(_attributes2);
 	                content = '<' + _element + attrString + '>' + content + '</' + _element + '>';
 	              }
 	            }
@@ -40270,9 +40316,10 @@
 	  value: true
 	});
 	
-	var _CSSProperty = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"react/lib/CSSProperty\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _CSSProperty = __webpack_require__(100);
 	
 	var VENDOR_PREFIX = /^(moz|ms|o|webkit)-/;
+	
 	var NUMERIC_STRING = /^\d+$/;
 	var UPPERCASE_PATTERN = /([A-Z])/g;
 	

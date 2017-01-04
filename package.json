@@ -15,7 +15,7 @@
     "prepublish": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-1 --plugins babel-plugin-add-module-exports"
   },
   "dependencies": {
-    "draft-js": "^0.9.0",
+    "draft-js": "^0.9.1",
     "draft-js-export-html": "^0.5.2",
     "draft-js-import-html": "^0.2.0",
     "nocms-events": "git+ssh://git@bitbucket.org/nocms/nocms-events.git"
