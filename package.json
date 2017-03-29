@@ -18,7 +18,7 @@
     "draft-js": "^0.9.1",
     "draft-js-export-html": "^0.5.2",
     "draft-js-import-html": "^0.2.0",
-    "nocms-events": "git+https://github.com/miles-no/nocms-events.git"
+    "nocms-events": "^0.1.2"
   },
   "devDependencies": {
     "babel": "^6.5.2",
