@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class FormattingButton extends React.Component {
   constructor() {
@@ -24,10 +25,10 @@ class FormattingButton extends React.Component {
 }
 
 FormattingButton.propTypes = {
-  label: React.PropTypes.string,
-  onToggle: React.PropTypes.func,
-  active: React.PropTypes.bool,
-  style: React.PropTypes.string,
+  label: PropTypes.string,
+  onToggle: PropTypes.func,
+  active: PropTypes.bool,
+  style: PropTypes.string,
 };
 
 module.exports = FormattingButton;

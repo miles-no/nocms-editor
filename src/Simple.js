@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import events from 'nocms-events';
 
 class Simple extends Component {
@@ -21,9 +22,9 @@ class Simple extends Component {
 }
 
 Simple.propTypes = {
-  text: React.PropTypes.string,
-  placeholder: React.PropTypes.string,
-  scope: React.PropTypes.string,
+  text: PropTypes.string,
+  placeholder: PropTypes.string,
+  scope: PropTypes.string,
 };
 
 Simple.defaultProps = {

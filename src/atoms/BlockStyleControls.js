@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Editor, EditorState, ContentState } from 'draft-js';
 import FormattingButton from './FormattingButton';
 
@@ -30,8 +31,8 @@ const BlockStyleControls = (props) => {
 };
 
 BlockStyleControls.propTypes = {
-  editorState: React.PropTypes.object,
-  onToggle: React.PropTypes.func,
+  editorState: PropTypes.object,
+  onToggle: PropTypes.func,
 };
 
 module.exports = BlockStyleControls;

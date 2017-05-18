@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import { Editor, EditorState, Entity, CompositeDecorator, RichUtils } from 'draft-js';
 import linkStrategy from './helpers/linkStrategy.js';
 import { stateToHTML } from 'draft-js-export-html';
@@ -281,9 +282,9 @@ function getBlockStyle(block) {
 }
 
 LinkEditor.propTypes = {
-  text: React.PropTypes.string,
-  placeholder: React.PropTypes.string,
-  scope: React.PropTypes.string,
+  text: PropTypes.string,
+  placeholder: PropTypes.string,
+  scope: PropTypes.string,
 };
 
 LinkEditor.defaultProps = {

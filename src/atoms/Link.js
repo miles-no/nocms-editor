@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Editor, Entity } from 'draft-js';
 
 const Link = (props) => {
@@ -11,8 +12,8 @@ const Link = (props) => {
 };
 
 Link.propTypes = {
-  entityKey: React.PropTypes.string,
-  children: React.PropTypes.node,
+  entityKey: PropTypes.string,
+  children: PropTypes.node,
 };
 
 module.exports = Link;

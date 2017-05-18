@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { Editor, EditorState, ContentState } from 'draft-js';
 import FormattingButton from './FormattingButton';
@@ -27,8 +28,8 @@ const FormattingControls = (props) => {
 };
 
 FormattingControls.propTypes = {
-  editorState: React.PropTypes.object,
-  onToggle: React.PropTypes.func,
+  editorState: PropTypes.object,
+  onToggle: PropTypes.func,
 };
 
 module.exports = FormattingControls;
