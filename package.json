@@ -1,6 +1,6 @@
 {
   "name": "nocms-editor",
-  "version": "0.0.0-development",
+  "version": "0.0.0-semantic-release",
   "description": "Text editor for NoCMS",
   "main": "lib/index.js",
   "author": "",
