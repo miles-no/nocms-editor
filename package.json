@@ -1,18 +1,19 @@
 {
   "name": "nocms-editor",
-  "version": "0.0.4",
+  "version": "0.0.0-development",
   "description": "Text editor for NoCMS",
   "main": "lib/index.js",
   "author": "",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org/nocms/nocms-editor.git"
+    "url": "https://github.com/miles-no/nocms-editor"
   },
   "scripts": {
     "dev": "webpack --watch --inline",
     "test": "",
-    "prepublish": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-1 --plugins babel-plugin-add-module-exports"
+    "prepublish": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-1 --plugins babel-plugin-add-module-exports",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
     "draft-js": "^0.9.1",
@@ -30,6 +31,7 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-1": "^6.16.0",
+    "condition-circle": "^1.5.0",
     "eslint": "^3.12.2",
     "eslint-config-webteam": "git+https://github.com/miles-no/eslint-config-webteam.git",
     "eslint-loader": "^1.6.1",
@@ -39,6 +41,7 @@
     "prop-types": "^15.5.10",
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
+    "semantic-release": "^6.3.6",
     "watch": "^0.19.1",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
@@ -47,5 +50,9 @@
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
     "prop-types": "^15.5.10"
+  },
+  "release": {
+    "verifyConditions": "condition-circle",
+    "debug": false
   }
 }
