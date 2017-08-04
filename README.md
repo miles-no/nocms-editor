@@ -6,6 +6,7 @@ Editor for NoCMS. Used by publishers. Features editors of different complexity a
 [![Dependency Status](https://david-dm.org/miles-no/nocms-editor.svg)](https://david-dm.org/miles-no/nocms-editor)
 [![devDependencies](https://david-dm.org/miles-no/nocms-editor/dev-status.svg)](https://david-dm.org/miles-no/nocms-editor?type=dev)
 
+
 ## Installation
 
 Install nocms-editor from NPM and include it in your own React build process (using [Browserify](http://browserify.org), [Webpack](http://webpack.github.io/), etc).
