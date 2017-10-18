@@ -20,7 +20,7 @@ class FormattingButton extends React.Component {
       <button className={className} onMouseDown={this.onToggle}>
         {this.props.label}
       </button>
-     );
+    );
   }
 }
 

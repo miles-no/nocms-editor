@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Editor, EditorState, ContentState } from 'draft-js';
 import FormattingButton from './FormattingButton';
 
 const BLOCK_TYPES = [
@@ -17,14 +16,15 @@ const BlockStyleControls = (props) => {
     .getType();
   return (
     <span className="text-editor__formatting">
-      {BLOCK_TYPES.map(type =>
-        <FormattingButton
+      {BLOCK_TYPES.map((type) => {
+        return (<FormattingButton
           key={type.label}
           active={type.style === blockType}
           label={type.label}
           onToggle={props.onToggle}
           style={type.style}
-        />
+        />);
+      },
       )}
     </span>
   );

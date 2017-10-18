@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
-import { Editor, EditorState, ContentState } from 'draft-js';
 import FormattingButton from './FormattingButton';
 
 const INLINE_STYLES = [
@@ -14,14 +12,15 @@ const FormattingControls = (props) => {
   const currentStyle = props.editorState.getCurrentInlineStyle();
   return (
     <span className="text-editor__formatting">
-      {INLINE_STYLES.map(type =>
-        <FormattingButton
+      {INLINE_STYLES.map((type) => {
+        return (<FormattingButton
           key={type.label}
           active={currentStyle.has(type.style)}
           label={type.label}
           onToggle={props.onToggle}
           style={type.style}
-        />
+        />);
+      },
       )}
     </span>
   );

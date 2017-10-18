@@ -59,11 +59,12 @@ class SimpleMultiline extends React.Component {
     );
   }
 
+  /* eslint no-return-assign: off */
   getGhostField() {
     return (
       <div
         className="nocms__text-input nocms__textarea nocms__textarea--ghost"
-        ref={(c) => this.ghost = c}
+        ref={(c) => { return this.ghost = c; }}
         aria-hidden="true"
       >
         {this.props.text}
@@ -81,12 +82,12 @@ class SimpleMultiline extends React.Component {
             {this.getExpandableField()}
             {this.getGhostField()}
           </div>
-        : <textarea
-          className={className}
-          value={text}
-          placeholder={placeholder}
-          onChange={this.onChange}
-        />
+          : <textarea
+            className={className}
+            value={text}
+            placeholder={placeholder}
+            onChange={this.onChange}
+          />
         }
       </div>
     );

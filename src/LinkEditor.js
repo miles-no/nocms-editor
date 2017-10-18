@@ -1,14 +1,34 @@
+/* eslint no-underscore-dangle: off */
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Editor, EditorState, Entity, CompositeDecorator, RichUtils } from 'draft-js';
-import linkStrategy from './helpers/linkStrategy.js';
+import events from 'nocms-events';
 import { stateToHTML } from 'draft-js-export-html';
 import { stateFromHTML } from 'draft-js-import-html';
+import linkStrategy from './helpers/linkStrategy';
 import Link from './atoms/Link';
 import FormattingControls from './atoms/FormattingControls';
 import BlockStyleControls from './atoms/BlockStyleControls';
-import events from 'nocms-events';
+
+const active = (block, editorState) => {
+  let isActive;
+  const selection = editorState.getSelection();
+  block.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      return entityKey !== null && Entity.get(entityKey).getType() === 'LINK';
+    },
+
+    (start, end) => {
+      if (block.getKey() === selection.anchorKey && selection.anchorKey === selection.focusKey) {
+        if (selection.anchorOffset >= start && selection.focusOffset <= end) {
+          isActive = true;
+        }
+      }
+    },
+  );
+  return isActive;
+};
 
 class LinkEditor extends React.Component {
   constructor(props) {
@@ -29,13 +49,14 @@ class LinkEditor extends React.Component {
       styleObj: {},
       disableAdd: true,
     };
-
-    this.focus = () => this.refs.editor.focus();
+    /* eslint react/no-string-refs: off */
+    // @TODO: rewrite
+    this.focus = () => { return this.refs.editor.focus(); };
     this.onChange = this.onChange.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onFocus = this.onFocus.bind(this);
     this.promptForLink = this.promptForLink.bind(this);
-    this.onURLChange = (e) => this.setState({ urlValue: e.target.value });
+    this.onURLChange = (e) => { return this.setState({ urlValue: e.target.value }); };
     this.confirmLink = this.confirmLink.bind(this);
     this.onLinkInputKeyDown = this.onLinkInputKeyDown.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
@@ -85,45 +106,30 @@ class LinkEditor extends React.Component {
     this.setState({ showToolbar: true });
   }
 
-  getSelectedClientRect = () => {
-    const selection = window.getSelection();
-    const oRange = selection.getRangeAt(0);
-    return oRange.getBoundingClientRect();
-  };
+  onTab(e) {
+    const maxDepth = 4;
+    this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
+  }
 
   getSelectedBlockElement = () => {
     const selection = window.getSelection();
     if (selection.rangeCount === 0) return null;
     let node = selection.getRangeAt(0).startContainer;
     do {
+      /* eslint eqeqeq: off */
       if (node.getAttribute && node.getAttribute('data-block') == 'true') {
         return node;
       }
       node = node.parentNode;
-    } while (node != null)
+    } while (node != null);
     return null;
   };
 
-  onTab(e) {
-    const maxDepth = 4;
-    this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
-  }
-
-  getSelectionRect(selected) {
-    if (!selected || !selected.rangeCount || selected.isCollapsed) return null;
-
-    const _rect = selected.getRangeAt(0).getBoundingClientRect();
-    let rect = _rect && _rect.top ? _rect : selected.getRangeAt(0).getClientRects()[0];
-    if (!rect) {
-      if (selected.anchorNode && selected.anchorNode.getBoundingClientRect) {
-        rect = selected.anchorNode.getBoundingClientRect();
-        rect.isEmptyline = true;
-      } else {
-        return null;
-      }
-    }
-    return rect;
-  }
+  getSelectedClientRect = () => {
+    const selection = window.getSelection();
+    const oRange = selection.getRangeAt(0);
+    return oRange.getBoundingClientRect();
+  };
 
   handleKeyCommand(command) {
     const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
@@ -138,8 +144,8 @@ class LinkEditor extends React.Component {
     this.onChange(
       RichUtils.toggleBlockType(
         this.state.editorState,
-        blockType
-      )
+        blockType,
+      ),
     );
   }
 
@@ -147,8 +153,8 @@ class LinkEditor extends React.Component {
     this.onChange(
       RichUtils.toggleInlineStyle(
         this.state.editorState,
-        inlineStyle
-      )
+        inlineStyle,
+      ),
     );
   }
 
@@ -160,9 +166,9 @@ class LinkEditor extends React.Component {
       return;
     }
     const block = editorState
-        .getCurrentContent()
-        .getBlockForKey(editorState.getSelection().getStartKey());
-    if (this.active(block, editorState)) {
+      .getCurrentContent()
+      .getBlockForKey(editorState.getSelection().getStartKey());
+    if (active(block, editorState)) {
       this.setState({
         editorState: RichUtils.toggleLink(editorState, selection, null),
       });
@@ -171,7 +177,7 @@ class LinkEditor extends React.Component {
         showURLInput: true,
         urlValue: '',
       }, () => {
-        setTimeout(() => this.refs.url.focus(), 0);
+        setTimeout(() => { return this.refs.url.focus(); }, 0);
       });
     }
   }
@@ -184,12 +190,12 @@ class LinkEditor extends React.Component {
       editorState: RichUtils.toggleLink(
         editorState,
         editorState.getSelection(),
-        entityKey
+        entityKey,
       ),
       showURLInput: false,
       urlValue: '',
     }, () => {
-      setTimeout(() => this.refs.editor.focus(), 0);
+      setTimeout(() => { return this.refs.editor.focus(); }, 0);
     });
   }
 
@@ -199,28 +205,8 @@ class LinkEditor extends React.Component {
       showURLInput: false,
       urlValue: '',
     }, () => {
-      setTimeout(() => this.refs.editor.focus(), 0);
+      setTimeout(() => { return this.refs.editor.focus(); }, 0);
     });
-  }
-
-  active(block, editorState) {
-    let active;
-    const selection = editorState.getSelection();
-    block.findEntityRanges(
-      (character) => {
-        const entityKey = character.getEntity();
-        return entityKey !== null && Entity.get(entityKey).getType() === 'LINK';
-      },
-
-      (start, end) => {
-        if (block.getKey() === selection.anchorKey && selection.anchorKey === selection.focusKey) {
-          if (selection.anchorOffset >= start && selection.focusOffset <= end) {
-            active = true;
-          }
-        }
-      }
-    );
-    return active;
   }
 
   render() {
@@ -271,13 +257,6 @@ class LinkEditor extends React.Component {
         </div>
       </div>
     );
-  }
-}
-
-function getBlockStyle(block) {
-  switch (block.getType()) {
-    case 'blockquote': return 'RichEditor-blockquote';
-    default: return null;
   }
 }
 

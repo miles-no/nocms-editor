@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Editor, Entity } from 'draft-js';
+import { Entity } from 'draft-js';
 
 const Link = (props) => {
   const { url } = Entity.get(props.entityKey).getData();
