@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
-const path = require('path');
 
 const host = '0.0.0.0';
 const port = '9000';
@@ -37,7 +36,7 @@ const config = {
 new WebpackDevServer(webpack(config), {
   contentBase: './example',
   hot: true,
-}).listen(port, host, (err, result) => {
+}).listen(port, host, (err) => {
   if (err) {
     console.log(err);
   }
