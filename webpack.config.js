@@ -14,10 +14,10 @@ const config = {
     publicPath: `${__dirname}/example`,
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /(\.jsx|\.js)$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         exclude: /node_modules/,
       },
       {
@@ -37,7 +37,6 @@ const config = {
 new WebpackDevServer(webpack(config), {
   contentBase: './example',
   hot: true,
-  debug: true,
 }).listen(port, host, (err, result) => {
   if (err) {
     console.log(err);

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-const ReactDOM = require('react-dom');
+import ReactDOM from 'react-dom';
 import { Simple, LinkEditor, SimpleMultiline } from 'nocms-editor';
 import events from 'nocms-events';
 
@@ -21,11 +21,13 @@ class App extends React.Component {
   }
 
   render() {
-    return (<div>
-      <Simple scope="simple" text={this.state.simple} />
-      <LinkEditor scope="linkeditor" text={this.state.linkeditor} />
-      <SimpleMultiline scope="multiline" text={this.state.multiline} />
-    </div>);
+    return (
+      <div>
+        <Simple scope="simple" text={this.state.simple} />
+        <LinkEditor scope="linkeditor" text={this.state.linkeditor} />
+        <SimpleMultiline scope="multiline" text={this.state.multiline} />
+      </div>
+    );
   }
 }
 
