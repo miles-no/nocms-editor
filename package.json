@@ -42,7 +42,7 @@
     "prop-types": "^15.6.0",
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
-    "semantic-release": "^6.3.6",
+    "semantic-release": "^8.2.0",
     "watch": "^1.0.2",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.2"
