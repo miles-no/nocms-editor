@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Editor, EditorState, Entity, CompositeDecorator, RichUtils } from 'draft-js';
-import events from 'nocms-events';
+import { triggerGlobal } from 'nocms-events';
 import { stateToHTML } from 'draft-js-export-html';
 import { stateFromHTML } from 'draft-js-import-html';
 import linkStrategy from './helpers/linkStrategy';
@@ -98,7 +98,7 @@ class LinkEditor extends React.Component {
       return;
     }
     const html = stateToHTML(this.state.editorState.getCurrentContent());
-    events.trigger('nocms.value-changed', this.props.scope, html);
+    triggerGlobal('nocms.value-changed', this.props.scope, html);
     this.setState({ showToolbar: false });
   }
 

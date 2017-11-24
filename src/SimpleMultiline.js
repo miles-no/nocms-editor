@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import events from 'nocms-events';
+import { triggerGlobal } from 'nocms-events';
 
 const DEFAULT_HEIGHT = 70;
 const textareaClass = 'nocms__text-input nocms__textarea';
@@ -24,7 +24,7 @@ class SimpleMultiline extends React.Component {
   }
 
   onChange(event) {
-    events.trigger('nocms.value-changed', this.props.scope, event.target.value);
+    triggerGlobal('nocms.value-changed', this.props.scope, event.target.value);
   }
 
   setFilledTextareaHeight() {

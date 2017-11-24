@@ -20,10 +20,9 @@
     "draft-js": "^0.9.1",
     "draft-js-export-html": "^0.5.2",
     "draft-js-import-html": "^0.2.0",
-    "nocms-events": "1.1.1"
+    "nocms-events": "^1.2.0"
   },
   "devDependencies": {
-    "babel": "^6.5.2",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.10.4",
     "babel-eslint": "^7.2.3",
