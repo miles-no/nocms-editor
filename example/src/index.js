@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Simple, LinkEditor, SimpleMultiline } from 'nocms-editor';
 import events from 'nocms-events';
@@ -13,7 +13,7 @@ class App extends React.Component {
       multiline: '',
     };
 
-    events.listenTo('nocms.value-changed', (scope, value) => {
+    events.listenToGlobal('nocms.value-changed', (scope, value) => {
       const state = {};
       state[scope] = value;
       this.setState(state);
@@ -30,10 +30,5 @@ class App extends React.Component {
     );
   }
 }
-
-App.propTypes = {
-  simple: PropTypes.string,
-  linkeditor: PropTypes.string,
-};
 
 ReactDOM.render(<App />, document.getElementById('app'));
