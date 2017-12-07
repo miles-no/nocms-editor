@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Simple, LinkEditor, SimpleMultiline } from 'nocms-editor';
-import events from 'nocms-events';
+import { listenToGlobal } from 'nocms-events';
 
 class App extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class App extends React.Component {
       multiline: '',
     };
 
-    events.listenToGlobal('nocms.value-changed', (scope, value) => {
+    listenToGlobal('nocms.value-changed', (scope, value) => {
       const state = {};
       state[scope] = value;
       this.setState(state);
