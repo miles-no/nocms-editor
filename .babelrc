@@ -1,11 +1,11 @@
 {
   "presets": [
-    ["env", {
+    ["@babel/env", {
       "targets": {
         "browsers": ["last 2 versions", "IE 11"]
       }
     }],
-    "react",
-    "stage-1"
-  ]
+    "@babel/react"
+  ],
+  "plugins": ["@babel/plugin-proposal-class-properties"]
 }
