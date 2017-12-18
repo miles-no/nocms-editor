@@ -493,3 +493,9 @@ textarea[readonly] {
   position: absolute;
   top: 0;
 }
+
+.formatting-button--disabled {
+  color: grey;
+  cursor: default;
+  
+}

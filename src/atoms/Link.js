@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Entity } from 'draft-js';
 
 const Link = (props) => {
-  const { url } = Entity.get(props.entityKey).getData();
+  const { contentState, entityKey } = props;
+  const { url } = contentState.getEntity(entityKey).getData();
   return (
     <a href={url} className="editor-link" title={url}>
       {props.children}
@@ -13,6 +13,7 @@ const Link = (props) => {
 
 Link.propTypes = {
   entityKey: PropTypes.string,
+  contentState: PropTypes.object,
   children: PropTypes.node,
 };
 

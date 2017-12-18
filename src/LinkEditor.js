@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: off */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Editor, EditorState, Entity, CompositeDecorator, RichUtils } from 'draft-js';
+import { Editor, EditorState, CompositeDecorator, RichUtils } from 'draft-js';
 import { triggerGlobal } from 'nocms-events';
 import { stateToHTML } from 'draft-js-export-html';
 import { stateFromHTML } from 'draft-js-import-html';
@@ -16,7 +16,8 @@ const active = (block, editorState) => {
   block.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity();
-      return entityKey !== null && Entity.get(entityKey).getType() === 'LINK';
+      const contentState = editorState.getCurrentContent();
+      return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
     },
 
     (start, end) => {
@@ -185,10 +186,17 @@ class LinkEditor extends React.Component {
   confirmLink(e) {
     e.preventDefault();
     const { editorState, urlValue } = this.state;
-    const entityKey = Entity.create('LINK', 'MUTABLE', { url: urlValue });
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      'LINK',
+      'MUTABLE',
+      { url: urlValue },
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
     this.setState({
       editorState: RichUtils.toggleLink(
-        editorState,
+        newEditorState,
         editorState.getSelection(),
         entityKey,
       ),
@@ -238,7 +246,7 @@ class LinkEditor extends React.Component {
         <div className="text-editor__controls" style={{ visibility: this.state.showToolbar ? 'visible' : 'hidden' }}>
           <FormattingControls editorState={this.state.editorState} onToggle={this.toggleInlineStyle} />
           <BlockStyleControls editorState={this.state.editorState} onToggle={this.toggleBlockType} />
-          <button onMouseDown={this.promptForLink} className="button button_icon formatting-button" disabled={this.state.disableAdd}>
+          <button onMouseDown={this.promptForLink} className={`button button_icon formatting-button ${this.state.disableAdd ? 'formatting-button--disabled' : null}`} >
             <i className="material-icons">insert_link</i>
           </button>
         </div>
