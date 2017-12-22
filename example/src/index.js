@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Simple, LinkEditor, SimpleMultiline } from 'nocms-editor';
+import { Simple, LinkEditor, SimpleMultiline, PlainTextEditor } from 'nocms-editor';
 import { listenToGlobal } from 'nocms-events';
 
 class App extends React.Component {
@@ -11,6 +11,7 @@ class App extends React.Component {
       simple: '',
       linkeditor: '',
       multiline: '',
+      plaintext: '',
     };
 
     listenToGlobal('nocms.value-changed', (scope, value) => {
@@ -26,6 +27,7 @@ class App extends React.Component {
         <Simple scope="simple" text={this.state.simple} />
         <LinkEditor scope="linkeditor" text={this.state.linkeditor} />
         <SimpleMultiline scope="multiline" text={this.state.multiline} />
+        <PlainTextEditor scope="plaintext" text={this.state.plaintext} />
       </div>
     );
   }
