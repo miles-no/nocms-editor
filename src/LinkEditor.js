@@ -224,7 +224,7 @@ class LinkEditor extends React.Component {
         (<div className="text-editor__link-url">
           <div>
             <span className="text-editor__link-header">Add link</span>
-            <button className="button button__icon button__icon-only" onClick={this.abortLink}>
+            <button className="admin-button admin-button__icon admin-button__icon-only" onClick={this.abortLink}>
               <span><i className="material-icons">close</i><span className="sr-only">close</span></span>
             </button>
           </div>
@@ -237,7 +237,7 @@ class LinkEditor extends React.Component {
             value={this.state.urlValue}
             onKeyDown={this.onLinkInputKeyDown}
           />
-          <div className="button-container"><button className="button" onClick={this.confirmLink}>OK</button></div>
+          <div className="admin-button-container"><button className="admin-button" onClick={this.confirmLink}>OK</button></div>
         </div>);
     }
 
@@ -246,7 +246,7 @@ class LinkEditor extends React.Component {
         <div className="text-editor__controls" style={{ visibility: this.state.showToolbar ? 'visible' : 'hidden' }}>
           <FormattingControls editorState={this.state.editorState} onToggle={this.toggleInlineStyle} />
           <BlockStyleControls editorState={this.state.editorState} onToggle={this.toggleBlockType} />
-          <button onMouseDown={this.promptForLink} className={`button button_icon formatting-button ${this.state.disableAdd ? 'formatting-button--disabled' : null}`} >
+          <button onMouseDown={this.promptForLink} className={`admin-button admin-button_icon formatting-button ${this.state.disableAdd ? 'formatting-button--disabled' : null}`} >
             <i className="material-icons">insert_link</i>
           </button>
         </div>

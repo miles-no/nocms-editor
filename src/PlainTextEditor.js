@@ -12,7 +12,7 @@ class PlainTextEditor extends Component {
     this.state = {
       editorState: EditorState.createWithContent(convertedText, this.decorator),
     };
-    this.onChange = (editorState) => this.setState({editorState});
+    this.onChange = (editorState) => this.setState({ editorState }); //eslint-disable-line
     this.onBlur = this.onBlur.bind(this);
   }
 
