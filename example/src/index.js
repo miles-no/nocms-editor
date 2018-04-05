@@ -24,9 +24,13 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <h2> Simple</h2>
         <Simple scope="simple" text={this.state.simple} />
+        <h2>LinkEditor</h2>
         <LinkEditor scope="linkeditor" text={this.state.linkeditor} />
+        <h2>SimpleMultiline</h2>
         <SimpleMultiline scope="multiline" text={this.state.multiline} />
+        <h2>PlainTextEditor</h2>
         <PlainTextEditor scope="plaintext" text={this.state.plaintext} />
       </div>
     );
