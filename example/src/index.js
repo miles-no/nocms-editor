@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Simple, LinkEditor, SimpleMultiline, PlainTextEditor } from 'nocms-editor';
+import { Simple, LinkEditor, SimpleMultiline, PlainTextEditor } from 'nocms-editor'; // eslint-disable-line
 import { listenToGlobal } from 'nocms-events';
 
 class App extends React.Component {
