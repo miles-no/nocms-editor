@@ -261,6 +261,7 @@ class LinkEditor extends React.Component {
             onTab={this.onTab}
             placeholder={this.props.placeholder}
             ref="editor"
+            autoComplete="off"
           />
         </div>
       </div>
