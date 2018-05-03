@@ -99,6 +99,9 @@ class LinkEditor extends React.Component {
       return;
     }
     const html = stateToHTML(this.state.editorState.getCurrentContent());
+    if (html === this.props.text) {
+      return;
+    }
     triggerGlobal('nocms.value-changed', this.props.scope, html);
     this.setState({ showToolbar: false });
   }

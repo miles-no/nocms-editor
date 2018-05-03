@@ -9,7 +9,7 @@ class App extends React.Component {
 
     this.state = {
       simple: '',
-      linkeditor: '',
+      linkeditor: 'Heisann, vi har forhåndsdefinerte data!!',
       multiline: '',
       plaintext: '',
     };
